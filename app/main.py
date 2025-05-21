@@ -1,5 +1,8 @@
 from dotenv import load_dotenv
+import os
+import logging
 load_dotenv()
+load_dotenv(".env.prompts")
 from fastapi import FastAPI, HTTPException, Request, HTTPException, Depends, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -43,7 +46,6 @@ async def lifespan(app: FastAPI):
     memory = AsyncSqliteSaver(conn=conn)
     await memory.setup()
     logging.info("AsyncSqliteSaver initialized and setup called.")
-    
     llm = init_chat_model(model=os.getenv("LLM_MODEL"), model_provider=os.getenv("LLM_PROVIDER"), temperature=0.5)
 
     INITIAL_SUMMARY_PROMPT = ChatPromptTemplate.from_messages(
@@ -55,7 +57,7 @@ async def lifespan(app: FastAPI):
     max_summary_tokens = 256
     internal_summarizer = SummarizationNode( 
         token_counter=count_tokens_approximately,
-        model=init_chat_model(model=os.getenv("LLM_MODEL"), model_provider="google-genai",max_output_tokens=max_summary_tokens), # El mismo LLM o uno más pequeño para resumir
+        model=init_chat_model(model=os.getenv("LLM_MODEL"), model_provider=os.getenv("LLM_PROVIDER"),max_output_tokens=max_summary_tokens), # El mismo LLM o uno más pequeño para resumir
         max_tokens=3072, 
         max_tokens_before_summary=1024,
         max_summary_tokens=max_summary_tokens, 

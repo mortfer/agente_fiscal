@@ -15,7 +15,7 @@ from langchain_community.embeddings import OllamaEmbeddings
 from langchain_core.tools import tool
 from typing import Union, List, Optional 
 
-DB_DIR = "/db"  
+DB_DIR = str(project_root / "db/")
 _vectorstore = None
 _retriever = None
 _lock = threading.Lock()
