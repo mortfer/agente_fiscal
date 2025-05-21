@@ -35,7 +35,7 @@ def get_retriever(search_kwargs={"k": 5}):
                         embeddings,
                         allow_dangerous_deserialization=True
                     )
-                    _retriever = _vectorstore.as_retriever(search_kwargs)
+                    _retriever = _vectorstore.as_retriever(search_kwargs=search_kwargs)
                     print(f"FAISS index loaded successfully from {DB_DIR}.")
                 except Exception as e:
                     print(f"CRITICAL: Failed to load FAISS index from {DB_DIR}. Error: {e}")
